@@ -12,10 +12,6 @@ class Controller extends GetxController {
   var next = 1.obs;
   increment() => next++;
   List<int> numberList = [for (var i = 1; i <= 25; i++) i]..shuffle();
-  // RxInt score = 1.obs;
-  // RxInt previousScore = 1.obs;
-  // RxInt bestScore = 10000.obs;
-  // RxDouble difference = 1.1.obs;
 }
 
 class MyApp extends StatelessWidget {
@@ -59,15 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     void handleScore() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      // c.previousScore = c.score;
-      // c.score = elapsed.obs;
-      // if (c.score.toInt() < c.bestScore.toInt()) {
-      //   c.bestScore = c.score;
-      // }
-      // c.difference = ((c.previousScore.toInt() - c.score.toInt()) /
-      //         c.previousScore.toInt() *
-      //         100)
-      //     .obs;
       late int tempPrev, tempScore, tempBest;
       late double tempDiff;
       prefs.get("previous") == null
@@ -103,6 +90,12 @@ class _MyHomePageState extends State<MyHomePage> {
       Get.to(() => ResultPage());
     }
 
+    void restart() {
+      c.next = 1.obs;
+      c.numberList.shuffle();
+      stopwatch.reset();
+    }
+
     void increment() {
       c.next + 1 == 26 ? finish() : null;
     }
@@ -110,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(backgroundColor: Colors.white, actions: [
           IconButton(
-              onPressed: null /* RestartGame() */,
+              onPressed: (() => restart()),
               icon: Icon(
                 Icons.restart_alt,
                 color: Colors.black54,
@@ -158,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(
                               fontSize: 35,
                               color: c.numberList[5 * j + i] < c.next.toInt()
-                                  ? Colors.white70
+                                  ? Colors.grey
                                   : Colors.white),
                         )),
                         onTap: (() {
